@@ -1,0 +1,71 @@
+1，创建索引
+PUT /doc
+{
+  "mappings": {
+    "_doc":{
+      "_source":{
+        "excludes":["content"]
+      },
+      "properties":{
+        "title":{
+          "type":"text",
+          "analyzer":"ik_max_word"
+        },
+        "type":{
+          "type":"keyword"
+        },
+        "content":{
+          "type":"text",
+          "analyzer":"ik_max_word",
+          "store":true
+        },
+        "metadata":{
+          "type":"nested"
+        }
+      }
+    }
+  }
+}
+2，配置索引模板
+PUT _template/doc_entity
+{
+  "index_patterns": [
+    "*"
+  ],
+  "settings": {
+    "number_of_shards": 5
+  },
+  "mappings": {
+    "_doc": {
+      "_source": {
+        "excludes": [
+          "content"
+        ]
+      },
+      "properties": {
+        "content": {
+          "type": "text",
+          "store": true,
+          "analyzer": "ik_max_word"
+        },
+        "metadata": {
+          "type": "nested"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "type": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
