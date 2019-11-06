@@ -1,7 +1,26 @@
-spring:
+spring: 
+  freemarker: 
+    suffix: .ftl    
   data:
     elasticsearch:
       cluster-name: ltl
       cluster-nodes: localhost:9300 #必须填tcp port
       repositories:
         enabled: true
+  datasource: 
+    type: com.alibaba.druid.pool.DruidDataSource 
+    url: jdbc:mysql://192.168.1.123:3306/camel
+    username: root
+    password: boncmysql  
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #连接池等相关配置
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000  
+#    druid: 
+#      url: jdbc:mysql://192.168.1.123:3306/camel
+#      username: root
+#      password: boncmysql  
+#      #driver-class-name: com.mysql.cj.jdbc.Driver
+#      #连接池等相关配置
+#      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#      #filters: stat,wall,log4j
+#    filters: stat,log4j #去掉防火墙，否则获取序列值报错

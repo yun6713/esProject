@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,16 +26,20 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.txt.TXTParser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
 import com.bonc.constant.ProjectConstant;
 import com.bonc.entity.DocEntity;
 import com.bonc.parser.DocType;
 import com.bonc.service.DocService;
+
 /**
  * 阻塞队列实现bulk,key为uuid;30构建DocEntity，3个bulk线程，标志位判定是否结束
  * 
@@ -58,7 +60,7 @@ public class DocServiceImpl2 implements DocService {
 	AutoDetectParser parser;
 	@Autowired
 //	es必须填写配置文件信息后才自动装配
-	ElasticsearchTemplate eo;
+	ElasticsearchTemplate et;
 	@Override
 	public String add(String path) {
 		try {
@@ -80,7 +82,7 @@ public class DocServiceImpl2 implements DocService {
 					reads.acquire();
 					es.execute(()->{
 						try {
-							parseFile(path.toFile());
+							parseExample(path.toFile());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -127,7 +129,7 @@ public class DocServiceImpl2 implements DocService {
 			}
 			if(!queries.isEmpty()) {
 //				System.out.println("id:"+id);
-				eo.bulkIndex(queries);
+				et.bulkIndex(queries);
 			}
 			if(queries.size()<10) {
 				break;
@@ -135,7 +137,7 @@ public class DocServiceImpl2 implements DocService {
 		}while(true);
 	}
 //	通过tika读取文档内容，构建index存入阻塞队列
-	private void parseFile(File file) throws Exception {
+	private void parseExample(File file) throws Exception {
 		if(file.isDirectory()) {
 			dir(file.toPath());
 		}
@@ -145,7 +147,7 @@ public class DocServiceImpl2 implements DocService {
 	    try (InputStream stream = new FileInputStream(file)) {
 	    	String fName=file.getName();
 	    	int loc=fName.lastIndexOf(".");
-	    	DocType dt=loc==-1?DocType.UNKOWN
+	    	DocType dt=loc==-1?DocType.OTHERS
 					:DocType.of(fName.substring(loc).toLowerCase());
 	    	if(DocType.TXT.equals(dt)) {
 	    		txtParser.parse(stream, handler, metadata, new ParseContext());
@@ -158,7 +160,7 @@ public class DocServiceImpl2 implements DocService {
 	        }
 	    	DocEntity de=new DocEntity(fName,handler.toString(),dt,map);
 	    	IndexQuery query=new IndexQueryBuilder()
-	    			.withIndexName("doc").withType("_doc")
+//	    			.withIndexName("doc").withType("_doc")
 	    			.withObject(de)
 	    			.build();
 //	    	System.out.println(fName);
@@ -174,6 +176,12 @@ public class DocServiceImpl2 implements DocService {
 	    }
 //	    System.out.println(file.getName());
 //	    System.out.println("end");
+	}
+	@Override
+	public Object searchByContent(String content) {
+		MatchQueryBuilder qb=QueryBuilders.matchQuery("content", content);
+		Object obj=et.queryForPage(new StringQuery(qb.toString()), DocEntity.class);
+		return obj;
 	}
 
 }
