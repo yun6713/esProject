@@ -2,11 +2,15 @@ package com.bonc.entity;
 
 import java.util.Map;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+
 import com.bonc.parser.DocType;
 //ES文档描述
-
+@Document(indexName="doc",type="_doc")
 public class DocEntity {
 	private String title;
+	@Field(store=true)
 	private String content;
 	private DocType type;
 	private Map<String,Object> metadata;
@@ -22,13 +26,13 @@ public class DocEntity {
 		this.metadata = metadata;
 	}
 	public String getTitle() {
-		return content;
+		return title;
 	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	public String getContent() {
-		return title;
+		return content;
 	}
 	public void setContent(String content) {
 		this.content = content;
@@ -39,7 +43,7 @@ public class DocEntity {
 	public void setType(DocType type) {
 		this.type = type;
 	}
-	public Map<String, Object> getMetadata() {
+	public Object getMetadata() {
 		return metadata;
 	}
 	public void setMetadata(Map<String, Object> metadata) {

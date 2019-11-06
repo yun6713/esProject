@@ -1,0 +1,7 @@
+spring:
+  data:
+    elasticsearch:
+      cluster-name: ltl
+      cluster-nodes: localhost:9300 #必须填tcp port
+      repositories:
+        enabled: true

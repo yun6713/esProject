@@ -21,16 +21,21 @@ public enum DocType {
 	}
 	//获取文档类型枚举类
 	public static DocType of(String type) {
+		type=type.trim();
+		type=type.startsWith(".")?type.substring(1):type;
 		switch (type) {
 		case "doc":
+		case "docx":
 			return DocType.DOC;
 		case "txt":
 			return DocType.TXT;
 		case "pdf":
 			return DocType.PDF;
 		case "xls":
+		case "xlsx":
 			return DocType.XLS;
 		case "ppt":
+		case "pptx":
 			return DocType.PPT;
 		case "dir":
 			return DocType.DIR;

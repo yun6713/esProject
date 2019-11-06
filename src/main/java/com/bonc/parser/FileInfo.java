@@ -1,25 +1,24 @@
 package com.bonc.parser;
 
 import java.io.File;
+import java.util.Objects;
+
+import com.bonc.utils.CommonUtil;
 
 public class FileInfo {
 	private File doc;
 	private DocType type;
 //	传入path构建实例，获取file，文档类型
 	public FileInfo(String path) {
+		Objects.requireNonNull(path);
 		doc = new File(path);
-//		文档不存在时抛异常
-		if(!doc.exists())
-			throw new RuntimeException("文件不存在："+path);
 //		设置文档类型
-		int loc;
-		type=doc.isDirectory()?DocType.DIR
-				:(loc=path.lastIndexOf("."))==-1?DocType.UNKOWN
-				:DocType.of(path.substring(loc).toLowerCase());
-		
+		this.type=CommonUtil.getDocType(doc);		
 	}
-	public File getDoc() {
-		return doc;
+	public FileInfo(File file) {
+		Objects.requireNonNull(file);
+		this.doc=file;
+		this.type=CommonUtil.getDocType(doc);
 	}
 	public void setDoc(File doc) {
 		this.doc = doc;

@@ -10,10 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.txt.TXTParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -22,16 +22,21 @@ public class ParserTest {
 	@Test
 	public void parseExample() throws Exception {
 	    AutoDetectParser parser = new AutoDetectParser();
-	    BodyContentHandler handler = new BodyContentHandler();
-	    Metadata metadata = new Metadata();//esInfo  B.doc
-	    try (InputStream stream = new ClassPathResource("esInfo").getInputStream()) {
-	    	parser.parse(stream, handler, metadata);
-	        System.out.println(handler.toString());
-	        for(String name:metadata.names()) {
-	        	System.out.println(name+":"+metadata.get(name));	
-	        }
-	    }
-	    System.out.println("end");
+	    parser.getParsers().forEach((k,v)->{
+	    	System.out.println(k+":"+v);
+	    });
+//	    BodyContentHandler handler = new BodyContentHandler();
+//	    Metadata metadata = new Metadata();//esInfo  B.doc
+//	    try (InputStream is = new ClassPathResource("Java问题.txt").getInputStream()) {
+////	    	is.reset();
+////	    	parser.parse(is, handler, metadata);
+//	    	new TXTParser().parse(is, handler, metadata);
+//	        System.out.println(handler.toString());
+//	        for(String name:metadata.names()) {
+//	        	System.out.println(name+":"+metadata.get(name));	
+//	        }
+//	    }
+//	    System.out.println("end");
 	}
 	public void parseExample(File file) throws Exception {
 		if(file.isDirectory()) {
