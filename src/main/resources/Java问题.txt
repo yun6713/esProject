@@ -1,0 +1,166 @@
+510231194108041319
+
+何代全
+
+15923266616，余
+
+正月二十一，梁莉妈生日
+
+
+104871201205006745
+1048742012006745
+
+1，maven配置远程仓库？
+
+2，tarena笔记；taneracode,code_2013
+
+
+http://code.tarena.com.cn/
+tarenacode
+code_2013
+
+
+excutorservice
+
+线程池中线程的管理？
+CachedThreadPool，建立缓存区，缓存初始化线程；自动终止、移除已有60S未使用的线程。无线程可用时创建新线程。
+FixedThreadPool，固定大小线程池；
+SingleThreadExecutor，单个线程，保证任务执行完成；如当前线程意外终止，会创建一个新线程继续执行任务。
+ScheduleThreadPool，固定大小线程池，定时执行任务。
+
+快速排序
+选取一个元素作为参照，小左大右；而后对其左右分别再次递归，直到选择元素在最左/最右。
+
+class　Quick//两种交换方式、比对方向
+{
+　public　void　sort(int　arr[],int　low,int　high)//排序数组、参照位、高位
+　{
+　int　l=low;
+　int　h=high;
+　int　povit=arr[low];//参照元素
+ 
+　while(l<h)//循环判定，
+　{
+　while(l<h&&arr[h]>=povit)//从高位开始判定，元素大于参照值时，位置不变，比较下一个元素
+　h--;
+　if(l<h){//交换arr[h]，arr[l]，l自加1
+　int　temp=arr[h];
+　arr[h]=arr[l];
+　arr[l]=temp;
+　l++;
+　}
+ 
+　while(l<h&&arr[l]<=povit)//比较参照元素与l~h元素
+　l++;
+ 
+　if(l<h){//交换
+　int　temp=arr[h];
+　arr[h]=arr[l];
+　arr[l]=temp;
+　h--;
+　}
+　}
+　print(arr);
+　System.out.print("l="+(l+1)+"h="+(h+1)+"povit="+povit+"\n");
+　if(l>low)sort(arr,low,l-1);//递归调用
+　if(h<high)sort(arr,l+1,high);
+　}
+}
+
+/*//////////////////////////方式二////////////////////////////////*/
+更高效点的代码：
+public<TextendsComparable<?superT>>
+T[]quickSort(T[]targetArr,int start,int end)
+{
+int i=start+1,j=end;
+T key=targetArr[start];
+SortUtil<T> sUtil=new SortUtil<T>();
+ 
+if(start>=end)return(targetArr);
+ 
+ 
+/*从i++和j--两个方向搜索不满足条件的值并交换
+*
+*条件为：i++方向小于key，j--方向大于key
+*/
+while(true)
+{
+while(targetArr[j].compareTo(key)>0)j--;
+while(targetArr[i].compareTo(key)<0&&i<j)i++;
+if(i>=j)break;
+sUtil.swap(targetArr,i,j);
+if(targetArr[i]==key)
+{
+j--;
+}else{
+i++;
+}
+}
+ 
+/*关键数据放到‘中间’*/
+sUtil.swap(targetArr,start,j);
+ 
+if(start<i-1)
+{
+this.quickSort(targetArr,start,i-1);
+}
+if(j+1<end)
+{
+this.quickSort(targetArr,j+1,end);
+}
+ 
+return targetArr;
+}
+ 
+ 
+/*//////////////方式三：减少交换次数，提高效率/////////////////////*/
+private<TextendsComparable<?superT>>
+voidquickSort(T[]targetArr,intstart,intend)
+{
+inti=start,j=end;
+Tkey=targetArr[start];
+ 
+while(i<j)
+{
+/*按j--方向遍历目标数组，直到比key小的值为止*/
+while(j>i&&targetArr[j].compareTo(key)>=0)
+{
+j--;
+}
+if(i<j)
+{
+/*targetArr[i]已经保存在key中，可将后面的数填入*/
+targetArr[i]=targetArr[j];
+i++;
+}
+/*按i++方向遍历目标数组，直到比key大的值为止*/
+while(i<j&&targetArr[i].compareTo(key)<=0)
+/*此处一定要小于等于零，假设数组之内有一亿个1，0交替出现的话，而key的值又恰巧是1的话，那么这个小于等于的作用就会使下面的if语句少执行一亿次。*/
+{
+i++;
+}
+if(i<j)
+{
+/*targetArr[j]已保存在targetArr[i]中，可将前面的值填入*/
+targetArr[j]=targetArr[i];
+j--;
+}
+}
+/*此时i==j*/
+targetArr[i]=key;
+ 
+/*递归调用，把key前面的完成排序*/
+this.quickSort(targetArr,start,i-1);
+ 
+ 
+/*递归调用，把key后面的完成排序*/
+this.quickSort(targetArr,j+1,end);
+ 
+}
+
+
+
+
+
+
+
