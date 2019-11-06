@@ -14,7 +14,7 @@ public class FileInfo {
 //		设置文档类型
 		int loc;
 		type=doc.isDirectory()?DocType.DIR
-				:(loc=path.lastIndexOf("."))==-1?DocType.UNKOWN
+				:(loc=path.lastIndexOf("."))==-1?DocType.OTHERS
 				:DocType.of(path.substring(loc).toLowerCase());
 		
 	}

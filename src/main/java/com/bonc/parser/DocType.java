@@ -7,7 +7,7 @@ package com.bonc.parser;
  */
 public enum DocType {
 	DOC("doc"),TXT("txt"),PDF("pdf"),XLS("xls"),PPT("ppt"),
-	UNKOWN(""),DIR("dir");
+	OTHERS("others"),DIR("dir");
 	private String type;
 	public String getType() {
 		return type;
@@ -21,6 +21,8 @@ public enum DocType {
 	}
 	//获取文档类型枚举类
 	public static DocType of(String type) {
+		type=type.trim().toLowerCase();
+		type=type.startsWith(".")?type.substring(1):type;
 		switch (type) {
 		case "doc":
 			return DocType.DOC;
@@ -35,7 +37,7 @@ public enum DocType {
 		case "dir":
 			return DocType.DIR;
 		default:
-			return DocType.UNKOWN;
+			return DocType.OTHERS;
 		}
 	}
 }

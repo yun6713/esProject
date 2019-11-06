@@ -15,8 +15,11 @@ import java.util.Arrays;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.elasticsearch.core.query.StringQuery;
 
 public class ParserTest {
 	@Test
@@ -70,4 +73,14 @@ public class ParserTest {
 			}
 		});
 	}
+
+	@Test
+	public void testEsQb() {
+		QueryBuilder qb=QueryBuilders.matchQuery("content", "ltl");
+		System.out.println(qb.toString());
+		StringQuery sq=new StringQuery(qb.toString());
+		System.out.println(sq.getFields());
+	}
+
+
 }
